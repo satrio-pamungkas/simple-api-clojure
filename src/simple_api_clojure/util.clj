@@ -3,10 +3,10 @@
 
 (def non-blank? (complement str/blank?))
 
-(defn max_length? [length_text]
+(defn max-length? [length text]
     (<= (count text) length))
 
-(defn non-blank-with-max-length? [length_text]
+(defn non-blank-with-max-length? [length text]
     (and (non-blank? text) (max-length? length text)))
 
 (defn min-length? [length text]
