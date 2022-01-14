@@ -5,11 +5,26 @@
               [clojure.set :refer [rename-keys]]
               [toucan.db :as db]
               [simple-api-clojure.util :as str]
-              [ring.util.http-response :refer [created]]))
+              [ring.util.http-response :refer [created ok not-found]]))
 
 
 (defn id->created [id]
     (created (str "/users/" id) {:id id}))
+
+(defn user->response [user]
+    (if user
+        (ok user)
+        (not-found)))
+
+(defn get-user-handler [user-id]
+    (-> (User user-id)
+        (dissoc :password)
+        user->response))
+
+(defn get-users-handler []
+    (->> (db/select User)
+         (map #(dissoc % :password))
+         ok))
 
 (defn canonicalize-user-req [user-req]
     (-> (update user-req :password hashers/derive)
